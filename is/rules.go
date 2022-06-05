@@ -10,7 +10,8 @@ import (
 	"unicode"
 
 	"github.com/asaskevich/govalidator"
-	validation "github.com/go-ozzo/ozzo-validation/v4"
+
+	validation "github.com/ltns35/ozzo-validation/v5"
 )
 
 var (
@@ -33,7 +34,9 @@ var (
 	// ErrUTFDigit is the error that returns in case of an invalid utf digit value.
 	ErrUTFDigit = validation.NewError("validation_is_utf_digit", "must contain unicode decimal digits only")
 	// ErrUTFLetterNumeric is the error that returns in case of an invalid utf numeric or letter value.
-	ErrUTFLetterNumeric = validation.NewError("validation_is utf_letter_numeric", "must contain unicode letters and numbers only")
+	ErrUTFLetterNumeric = validation.NewError(
+		"validation_is utf_letter_numeric", "must contain unicode letters and numbers only",
+	)
 	// ErrUTFNumeric is the error that returns in case of an invalid utf numeric value.
 	ErrUTFNumeric = validation.NewError("validation_is_utf_numeric", "must contain unicode number characters only")
 	// ErrLowerCase is the error that returns in case of an invalid lower case value.
@@ -71,7 +74,9 @@ var (
 	// ErrASCII is the error that returns in case of an invalid ASCII.
 	ErrASCII = validation.NewError("validation_is_ascii", "must contain ASCII characters only")
 	// ErrPrintableASCII is the error that returns in case of an invalid printable ASCII value.
-	ErrPrintableASCII = validation.NewError("validation_is_printable_ascii", "must contain printable ASCII characters only")
+	ErrPrintableASCII = validation.NewError(
+		"validation_is_printable_ascii", "must contain printable ASCII characters only",
+	)
 	// ErrMultibyte is the error that returns in case of an invalid multibyte value.
 	ErrMultibyte = validation.NewError("validation_is_multibyte", "must contain multibyte characters")
 	// ErrFullWidth is the error that returns in case of an invalid full-width value.
@@ -79,7 +84,9 @@ var (
 	// ErrHalfWidth is the error that returns in case of an invalid half-width value.
 	ErrHalfWidth = validation.NewError("validation_is_half_width", "must contain half-width characters")
 	// ErrVariableWidth is the error that returns in case of an invalid variable width value.
-	ErrVariableWidth = validation.NewError("validation_is_variable_width", "must contain both full-width and half-width characters")
+	ErrVariableWidth = validation.NewError(
+		"validation_is_variable_width", "must contain both full-width and half-width characters",
+	)
 	// ErrBase64 is the error that returns in case of an invalid base54 value.
 	ErrBase64 = validation.NewError("validation_is_base64", "must be encoded in Base64")
 	// ErrDataURI is the error that returns in case of an invalid data URI.
@@ -87,9 +94,13 @@ var (
 	// ErrE164 is the error that returns in case of an invalid e165.
 	ErrE164 = validation.NewError("validation_is_e164_number", "must be a valid E164 number")
 	// ErrCountryCode2 is the error that returns in case of an invalid two-letter country code.
-	ErrCountryCode2 = validation.NewError("validation_is_country_code_2_letter", "must be a valid two-letter country code")
+	ErrCountryCode2 = validation.NewError(
+		"validation_is_country_code_2_letter", "must be a valid two-letter country code",
+	)
 	// ErrCountryCode3 is the error that returns in case of an invalid three-letter country code.
-	ErrCountryCode3 = validation.NewError("validation_is_country_code_3_letter", "must be a valid three-letter country code")
+	ErrCountryCode3 = validation.NewError(
+		"validation_is_country_code_3_letter", "must be a valid three-letter country code",
+	)
 	// ErrCurrencyCode is the error that returns in case of an invalid currency code.
 	ErrCurrencyCode = validation.NewError("validation_is_currency_code", "must be valid ISO 4217 currency code")
 	// ErrDialString is the error that returns in case of an invalid string.
