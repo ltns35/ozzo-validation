@@ -1,4 +1,4 @@
-module github.com/go-ozzo/ozzo-validation/v5
+module github.com/ltns35/ozzo-validation/v5
 
 go 1.18
 
