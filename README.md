@@ -38,7 +38,7 @@ or `validation.ValidateStruct()` to validate the value.
 Run the following command to install the package:
 
 ```
-go get github.com/go-ozzo/ozzo-validation
+go get github.com/ltns35/ozzo-validation
 ```
 
 ### Validating a Simple Value
@@ -51,8 +51,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/go-ozzo/ozzo-validation/v4"
-	"github.com/go-ozzo/ozzo-validation/v4/is"
+	"github.com/ltns35/ozzo-validation/v5"
+	"github.com/ltns35/ozzo-validation/v5/is"
 )
 
 func main() {
