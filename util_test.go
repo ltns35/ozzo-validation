@@ -18,15 +18,40 @@ func TestEnsureString(t *testing.T) {
 
 	tests := []struct {
 		tag      string
-		value    interface{}
+		value    any
 		expected string
 		hasError bool
 	}{
-		{"t1", "abc", "abc", false},
-		{"t2", &str, "", true},
-		{"t3", bytes, "abc", false},
-		{"t4", &bytes, "", true},
-		{"t5", 100, "", true},
+		{
+			"t1",
+			"abc",
+			"abc",
+			false,
+		},
+		{
+			"t2",
+			&str,
+			"",
+			true,
+		},
+		{
+			"t3",
+			bytes,
+			"abc",
+			false,
+		},
+		{
+			"t4",
+			&bytes,
+			"",
+			true,
+		},
+		{
+			"t5",
+			100,
+			"",
+			true,
+		},
 	}
 	for _, test := range tests {
 		s, err := EnsureString(test.value)
@@ -51,24 +76,108 @@ func TestStringOrBytes(t *testing.T) {
 
 	tests := []struct {
 		tag      string
-		value    interface{}
+		value    any
 		str      string
 		bs       []byte
 		isString bool
 		isBytes  bool
 	}{
-		{"t1", str, "abc", nil, true, false},
-		{"t2", &str, "", nil, false, false},
-		{"t3", bytes, "", []byte("abc"), false, true},
-		{"t4", &bytes, "", nil, false, false},
-		{"t5", 100, "", nil, false, false},
-		{"t6", str2, "", nil, true, false},
-		{"t7", &str2, "", nil, false, false},
-		{"t8", bytes2, "", nil, false, true},
-		{"t9", &bytes2, "", nil, false, false},
-		{"t10", str3, "abc", nil, true, false},
-		{"t11", &str3, "", nil, false, false},
-		{"t12", str4, "", nil, false, false},
+		{
+			"t1",
+			str,
+			"abc",
+			nil,
+			true,
+			false,
+		},
+		{
+			"t2",
+			&str,
+			"",
+			nil,
+			false,
+			false,
+		},
+		{
+			"t3",
+			bytes,
+			"",
+			[]byte("abc"),
+			false,
+			true,
+		},
+		{
+			"t4",
+			&bytes,
+			"",
+			nil,
+			false,
+			false,
+		},
+		{
+			"t5",
+			100,
+			"",
+			nil,
+			false,
+			false,
+		},
+		{
+			"t6",
+			str2,
+			"",
+			nil,
+			true,
+			false,
+		},
+		{
+			"t7",
+			&str2,
+			"",
+			nil,
+			false,
+			false,
+		},
+		{
+			"t8",
+			bytes2,
+			"",
+			nil,
+			false,
+			true,
+		},
+		{
+			"t9",
+			&bytes2,
+			"",
+			nil,
+			false,
+			false,
+		},
+		{
+			"t10",
+			str3,
+			"abc",
+			nil,
+			true,
+			false,
+		},
+		{
+			"t11",
+			&str3,
+			"",
+			nil,
+			false,
+			false,
+		},
+		{
+			"t12",
+			str4,
+			"",
+			nil,
+			false,
+			false,
+		},
 	}
 	for _, test := range tests {
 		isString, str, isBytes, bs := StringOrBytes(test.value)
@@ -84,16 +193,52 @@ func TestLengthOfValue(t *testing.T) {
 
 	tests := []struct {
 		tag    string
-		value  interface{}
+		value  any
 		length int
 		err    string
 	}{
-		{"t1", "abc", 3, ""},
-		{"t2", []int{1, 2}, 2, ""},
-		{"t3", map[string]int{"A": 1, "B": 2}, 2, ""},
-		{"t4", a, 3, ""},
-		{"t5", &a, 0, "cannot get the length of ptr"},
-		{"t6", 123, 0, "cannot get the length of int"},
+		{
+			"t1",
+			"abc",
+			3,
+			"",
+		},
+		{
+			"t2",
+			[]int{
+				1,
+				2,
+			},
+			2,
+			"",
+		},
+		{
+			"t3",
+			map[string]int{
+				"A": 1,
+				"B": 2,
+			},
+			2,
+			"",
+		},
+		{
+			"t4",
+			a,
+			3,
+			"",
+		},
+		{
+			"t5",
+			&a,
+			0,
+			"cannot get the length of ptr",
+		},
+		{
+			"t6",
+			123,
+			0,
+			"cannot get the length of int",
+		},
 	}
 
 	for _, test := range tests {
@@ -108,21 +253,79 @@ func TestToInt(t *testing.T) {
 
 	tests := []struct {
 		tag    string
-		value  interface{}
+		value  any
 		result int64
 		err    string
 	}{
-		{"t1", 1, 1, ""},
-		{"t2", int8(1), 1, ""},
-		{"t3", int16(1), 1, ""},
-		{"t4", int32(1), 1, ""},
-		{"t5", int64(1), 1, ""},
-		{"t6", &a, 0, "cannot convert ptr to int64"},
-		{"t7", uint(1), 0, "cannot convert uint to int64"},
-		{"t8", float64(1), 0, "cannot convert float64 to int64"},
-		{"t9", "abc", 0, "cannot convert string to int64"},
-		{"t10", []int{1, 2}, 0, "cannot convert slice to int64"},
-		{"t11", map[string]int{"A": 1}, 0, "cannot convert map to int64"},
+		{
+			"t1",
+			1,
+			1,
+			"",
+		},
+		{
+			"t2",
+			int8(1),
+			1,
+			"",
+		},
+		{
+			"t3",
+			int16(1),
+			1,
+			"",
+		},
+		{
+			"t4",
+			int32(1),
+			1,
+			"",
+		},
+		{
+			"t5",
+			int64(1),
+			1,
+			"",
+		},
+		{
+			"t6",
+			&a,
+			0,
+			"cannot convert ptr to int64",
+		},
+		{
+			"t7",
+			uint(1),
+			0,
+			"cannot convert uint to int64",
+		},
+		{
+			"t8",
+			float64(1),
+			0,
+			"cannot convert float64 to int64",
+		},
+		{
+			"t9",
+			"abc",
+			0,
+			"cannot convert string to int64",
+		},
+		{
+			"t10",
+			[]int{
+				1,
+				2,
+			},
+			0,
+			"cannot convert slice to int64",
+		},
+		{
+			"t11",
+			map[string]int{"A": 1},
+			0,
+			"cannot convert map to int64",
+		},
 	}
 
 	for _, test := range tests {
@@ -138,22 +341,85 @@ func TestToUint(t *testing.T) {
 
 	tests := []struct {
 		tag    string
-		value  interface{}
+		value  any
 		result uint64
 		err    string
 	}{
-		{"t1", uint(1), 1, ""},
-		{"t2", uint8(1), 1, ""},
-		{"t3", uint16(1), 1, ""},
-		{"t4", uint32(1), 1, ""},
-		{"t5", uint64(1), 1, ""},
-		{"t6", 1, 0, "cannot convert int to uint64"},
-		{"t7", &a, 0, "cannot convert ptr to uint64"},
-		{"t8", &b, 0, "cannot convert ptr to uint64"},
-		{"t9", float64(1), 0, "cannot convert float64 to uint64"},
-		{"t10", "abc", 0, "cannot convert string to uint64"},
-		{"t11", []int{1, 2}, 0, "cannot convert slice to uint64"},
-		{"t12", map[string]int{"A": 1}, 0, "cannot convert map to uint64"},
+		{
+			"t1",
+			uint(1),
+			1,
+			"",
+		},
+		{
+			"t2",
+			uint8(1),
+			1,
+			"",
+		},
+		{
+			"t3",
+			uint16(1),
+			1,
+			"",
+		},
+		{
+			"t4",
+			uint32(1),
+			1,
+			"",
+		},
+		{
+			"t5",
+			uint64(1),
+			1,
+			"",
+		},
+		{
+			"t6",
+			1,
+			0,
+			"cannot convert int to uint64",
+		},
+		{
+			"t7",
+			&a,
+			0,
+			"cannot convert ptr to uint64",
+		},
+		{
+			"t8",
+			&b,
+			0,
+			"cannot convert ptr to uint64",
+		},
+		{
+			"t9",
+			float64(1),
+			0,
+			"cannot convert float64 to uint64",
+		},
+		{
+			"t10",
+			"abc",
+			0,
+			"cannot convert string to uint64",
+		},
+		{
+			"t11",
+			[]int{
+				1,
+				2,
+			},
+			0,
+			"cannot convert slice to uint64",
+		},
+		{
+			"t12",
+			map[string]int{"A": 1},
+			0,
+			"cannot convert map to uint64",
+		},
 	}
 
 	for _, test := range tests {
@@ -169,19 +435,67 @@ func TestToFloat(t *testing.T) {
 
 	tests := []struct {
 		tag    string
-		value  interface{}
+		value  any
 		result float64
 		err    string
 	}{
-		{"t1", float32(1), 1, ""},
-		{"t2", float64(1), 1, ""},
-		{"t3", 1, 0, "cannot convert int to float64"},
-		{"t4", uint(1), 0, "cannot convert uint to float64"},
-		{"t5", &a, 0, "cannot convert ptr to float64"},
-		{"t6", &b, 0, "cannot convert ptr to float64"},
-		{"t7", "abc", 0, "cannot convert string to float64"},
-		{"t8", []int{1, 2}, 0, "cannot convert slice to float64"},
-		{"t9", map[string]int{"A": 1}, 0, "cannot convert map to float64"},
+		{
+			"t1",
+			float32(1),
+			1,
+			"",
+		},
+		{
+			"t2",
+			float64(1),
+			1,
+			"",
+		},
+		{
+			"t3",
+			1,
+			0,
+			"cannot convert int to float64",
+		},
+		{
+			"t4",
+			uint(1),
+			0,
+			"cannot convert uint to float64",
+		},
+		{
+			"t5",
+			&a,
+			0,
+			"cannot convert ptr to float64",
+		},
+		{
+			"t6",
+			&b,
+			0,
+			"cannot convert ptr to float64",
+		},
+		{
+			"t7",
+			"abc",
+			0,
+			"cannot convert string to float64",
+		},
+		{
+			"t8",
+			[]int{
+				1,
+				2,
+			},
+			0,
+			"cannot convert slice to float64",
+		},
+		{
+			"t9",
+			map[string]int{"A": 1},
+			0,
+			"cannot convert map to float64",
+		},
 	}
 
 	for _, test := range tests {
@@ -200,64 +514,240 @@ func TestIsEmpty(t *testing.T) {
 	var time2 time.Time
 	tests := []struct {
 		tag   string
-		value interface{}
+		value any
 		empty bool
 	}{
 		// nil
-		{"t0", nil, true},
+		{
+			"t0",
+			nil,
+			true,
+		},
 		// string
-		{"t1.1", "", true},
-		{"t1.2", "1", false},
-		{"t1.3", MyString(""), true},
-		{"t1.4", MyString("1"), false},
+		{
+			"t1.1",
+			"",
+			true,
+		},
+		{
+			"t1.2",
+			"1",
+			false,
+		},
+		{
+			"t1.3",
+			MyString(""),
+			true,
+		},
+		{
+			"t1.4",
+			MyString("1"),
+			false,
+		},
 		// slice
-		{"t2.1", []byte(""), true},
-		{"t2.2", []byte("1"), false},
+		{
+			"t2.1",
+			[]byte(""),
+			true,
+		},
+		{
+			"t2.2",
+			[]byte("1"),
+			false,
+		},
 		// map
-		{"t3.1", map[string]int{}, true},
-		{"t3.2", map[string]int{"a": 1}, false},
+		{
+			"t3.1",
+			map[string]int{},
+			true,
+		},
+		{
+			"t3.2",
+			map[string]int{"a": 1},
+			false,
+		},
 		// bool
-		{"t4.1", false, true},
-		{"t4.2", true, false},
+		{
+			"t4.1",
+			false,
+			true,
+		},
+		{
+			"t4.2",
+			true,
+			false,
+		},
 		// int
-		{"t5.1", 0, true},
-		{"t5.2", int8(0), true},
-		{"t5.3", int16(0), true},
-		{"t5.4", int32(0), true},
-		{"t5.5", int64(0), true},
-		{"t5.6", 1, false},
-		{"t5.7", int8(1), false},
-		{"t5.8", int16(1), false},
-		{"t5.9", int32(1), false},
-		{"t5.10", int64(1), false},
+		{
+			"t5.1",
+			0,
+			true,
+		},
+		{
+			"t5.2",
+			int8(0),
+			true,
+		},
+		{
+			"t5.3",
+			int16(0),
+			true,
+		},
+		{
+			"t5.4",
+			int32(0),
+			true,
+		},
+		{
+			"t5.5",
+			int64(0),
+			true,
+		},
+		{
+			"t5.6",
+			1,
+			false,
+		},
+		{
+			"t5.7",
+			int8(1),
+			false,
+		},
+		{
+			"t5.8",
+			int16(1),
+			false,
+		},
+		{
+			"t5.9",
+			int32(1),
+			false,
+		},
+		{
+			"t5.10",
+			int64(1),
+			false,
+		},
 		// uint
-		{"t6.1", uint(0), true},
-		{"t6.2", uint8(0), true},
-		{"t6.3", uint16(0), true},
-		{"t6.4", uint32(0), true},
-		{"t6.5", uint64(0), true},
-		{"t6.6", uint(1), false},
-		{"t6.7", uint8(1), false},
-		{"t6.8", uint16(1), false},
-		{"t6.9", uint32(1), false},
-		{"t6.10", uint64(1), false},
+		{
+			"t6.1",
+			uint(0),
+			true,
+		},
+		{
+			"t6.2",
+			uint8(0),
+			true,
+		},
+		{
+			"t6.3",
+			uint16(0),
+			true,
+		},
+		{
+			"t6.4",
+			uint32(0),
+			true,
+		},
+		{
+			"t6.5",
+			uint64(0),
+			true,
+		},
+		{
+			"t6.6",
+			uint(1),
+			false,
+		},
+		{
+			"t6.7",
+			uint8(1),
+			false,
+		},
+		{
+			"t6.8",
+			uint16(1),
+			false,
+		},
+		{
+			"t6.9",
+			uint32(1),
+			false,
+		},
+		{
+			"t6.10",
+			uint64(1),
+			false,
+		},
 		// float
-		{"t7.1", float32(0), true},
-		{"t7.2", float64(0), true},
-		{"t7.3", float32(1), false},
-		{"t7.4", float64(1), false},
+		{
+			"t7.1",
+			float32(0),
+			true,
+		},
+		{
+			"t7.2",
+			float64(0),
+			true,
+		},
+		{
+			"t7.3",
+			float32(1),
+			false,
+		},
+		{
+			"t7.4",
+			float64(1),
+			false,
+		},
 		// interface, ptr
-		{"t8.1", &s1, true},
-		{"t8.2", &s2, false},
-		{"t8.3", s3, true},
+		{
+			"t8.1",
+			&s1,
+			true,
+		},
+		{
+			"t8.2",
+			&s2,
+			false,
+		},
+		{
+			"t8.3",
+			s3,
+			true,
+		},
 		// struct
-		{"t9.1", s4, false},
-		{"t9.2", &s4, false},
+		{
+			"t9.1",
+			s4,
+			false,
+		},
+		{
+			"t9.2",
+			&s4,
+			false,
+		},
 		// time.Time
-		{"t10.1", time1, false},
-		{"t10.2", &time1, false},
-		{"t10.3", time2, true},
-		{"t10.4", &time2, true},
+		{
+			"t10.1",
+			time1,
+			false,
+		},
+		{
+			"t10.2",
+			&time1,
+			false,
+		},
+		{
+			"t10.3",
+			time2,
+			true,
+		},
+		{
+			"t10.4",
+			&time2,
+			true,
+		},
 	}
 
 	for _, test := range tests {
@@ -273,23 +763,112 @@ func TestIndirect(t *testing.T) {
 
 	tests := []struct {
 		tag    string
-		value  interface{}
-		result interface{}
+		value  any
+		result any
 		isNil  bool
 	}{
-		{"t1", 100, 100, false},
-		{"t2", &a, 100, false},
-		{"t3", b, nil, true},
-		{"t4", nil, nil, true},
-		{"t5", sql.NullInt64{Int64: 0, Valid: false}, nil, true},
-		{"t6", sql.NullInt64{Int64: 1, Valid: false}, nil, true},
-		{"t7", &sql.NullInt64{Int64: 0, Valid: false}, nil, true},
-		{"t8", &sql.NullInt64{Int64: 1, Valid: false}, nil, true},
-		{"t9", sql.NullInt64{Int64: 0, Valid: true}, int64(0), false},
-		{"t10", sql.NullInt64{Int64: 1, Valid: true}, int64(1), false},
-		{"t11", &sql.NullInt64{Int64: 0, Valid: true}, int64(0), false},
-		{"t12", &sql.NullInt64{Int64: 1, Valid: true}, int64(1), false},
-		{"t13", c, nil, true},
+		{
+			"t1",
+			100,
+			100,
+			false,
+		},
+		{
+			"t2",
+			&a,
+			100,
+			false,
+		},
+		{
+			"t3",
+			b,
+			nil,
+			true,
+		},
+		{
+			"t4",
+			nil,
+			nil,
+			true,
+		},
+		{
+			"t5",
+			sql.NullInt64{
+				Int64: 0,
+				Valid: false,
+			},
+			nil,
+			true,
+		},
+		{
+			"t6",
+			sql.NullInt64{
+				Int64: 1,
+				Valid: false,
+			},
+			nil,
+			true,
+		},
+		{
+			"t7",
+			&sql.NullInt64{
+				Int64: 0,
+				Valid: false,
+			},
+			nil,
+			true,
+		},
+		{
+			"t8",
+			&sql.NullInt64{
+				Int64: 1,
+				Valid: false,
+			},
+			nil,
+			true,
+		},
+		{
+			"t9",
+			sql.NullInt64{
+				Int64: 0,
+				Valid: true,
+			},
+			int64(0),
+			false,
+		},
+		{
+			"t10",
+			sql.NullInt64{
+				Int64: 1,
+				Valid: true,
+			},
+			int64(1),
+			false,
+		},
+		{
+			"t11",
+			&sql.NullInt64{
+				Int64: 0,
+				Valid: true,
+			},
+			int64(0),
+			false,
+		},
+		{
+			"t12",
+			&sql.NullInt64{
+				Int64: 1,
+				Valid: true,
+			},
+			int64(1),
+			false,
+		},
+		{
+			"t13",
+			c,
+			nil,
+			true,
+		},
 	}
 
 	for _, test := range tests {

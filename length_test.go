@@ -16,25 +16,130 @@ func TestLength(t *testing.T) {
 	tests := []struct {
 		tag      string
 		min, max int
-		value    interface{}
+		value    any
 		err      string
 	}{
-		{"t1", 2, 4, "abc", ""},
-		{"t2", 2, 4, "", ""},
-		{"t3", 2, 4, "abcdf", "the length must be between 2 and 4"},
-		{"t4", 0, 4, "ab", ""},
-		{"t5", 0, 4, "abcde", "the length must be no more than 4"},
-		{"t6", 2, 0, "ab", ""},
-		{"t7", 2, 0, "a", "the length must be no less than 2"},
-		{"t8", 2, 0, v, ""},
-		{"t9", 2, 0, 123, "cannot get the length of int"},
-		{"t10", 2, 4, sql.NullString{String: "abc", Valid: true}, ""},
-		{"t11", 2, 4, sql.NullString{String: "", Valid: true}, ""},
-		{"t12", 2, 4, &sql.NullString{String: "abc", Valid: true}, ""},
-		{"t13", 2, 2, "abcdf", "the length must be exactly 2"},
-		{"t14", 2, 2, "ab", ""},
-		{"t15", 0, 0, "", ""},
-		{"t16", 0, 0, "ab", "the value must be empty"},
+		{
+			"t1",
+			2,
+			4,
+			"abc",
+			"",
+		},
+		{
+			"t2",
+			2,
+			4,
+			"",
+			"",
+		},
+		{
+			"t3",
+			2,
+			4,
+			"abcdf",
+			"the length must be between 2 and 4",
+		},
+		{
+			"t4",
+			0,
+			4,
+			"ab",
+			"",
+		},
+		{
+			"t5",
+			0,
+			4,
+			"abcde",
+			"the length must be no more than 4",
+		},
+		{
+			"t6",
+			2,
+			0,
+			"ab",
+			"",
+		},
+		{
+			"t7",
+			2,
+			0,
+			"a",
+			"the length must be no less than 2",
+		},
+		{
+			"t8",
+			2,
+			0,
+			v,
+			"",
+		},
+		{
+			"t9",
+			2,
+			0,
+			123,
+			"cannot get the length of int",
+		},
+		{
+			"t10",
+			2,
+			4,
+			sql.NullString{
+				String: "abc",
+				Valid:  true,
+			},
+			"",
+		},
+		{
+			"t11",
+			2,
+			4,
+			sql.NullString{
+				String: "",
+				Valid:  true,
+			},
+			"",
+		},
+		{
+			"t12",
+			2,
+			4,
+			&sql.NullString{
+				String: "abc",
+				Valid:  true,
+			},
+			"",
+		},
+		{
+			"t13",
+			2,
+			2,
+			"abcdf",
+			"the length must be exactly 2",
+		},
+		{
+			"t14",
+			2,
+			2,
+			"ab",
+			"",
+		},
+		{
+			"t15",
+			0,
+			0,
+			"",
+			"",
+		},
+		{
+			"t16",
+			0,
+			0,
+			"ab",
+			"the value must be empty",
+		},
 	}
 
 	for _, test := range tests {
@@ -49,27 +154,150 @@ func TestRuneLength(t *testing.T) {
 	tests := []struct {
 		tag      string
 		min, max int
-		value    interface{}
+		value    any
 		err      string
 	}{
-		{"t1", 2, 4, "abc", ""},
-		{"t1.1", 2, 3, "💥💥", ""},
-		{"t1.2", 2, 3, "💥💥💥", ""},
-		{"t1.3", 2, 3, "💥", "the length must be between 2 and 3"},
-		{"t1.4", 2, 3, "💥💥💥💥", "the length must be between 2 and 3"},
-		{"t2", 2, 4, "", ""},
-		{"t3", 2, 4, "abcdf", "the length must be between 2 and 4"},
-		{"t4", 0, 4, "ab", ""},
-		{"t5", 0, 4, "abcde", "the length must be no more than 4"},
-		{"t6", 2, 0, "ab", ""},
-		{"t7", 2, 0, "a", "the length must be no less than 2"},
-		{"t8", 2, 0, v, ""},
-		{"t9", 2, 0, 123, "cannot get the length of int"},
-		{"t10", 2, 4, sql.NullString{String: "abc", Valid: true}, ""},
-		{"t11", 2, 4, sql.NullString{String: "", Valid: true}, ""},
-		{"t12", 2, 4, &sql.NullString{String: "abc", Valid: true}, ""},
-		{"t13", 2, 3, &sql.NullString{String: "💥💥", Valid: true}, ""},
-		{"t14", 2, 3, &sql.NullString{String: "💥", Valid: true}, "the length must be between 2 and 3"},
+		{
+			"t1",
+			2,
+			4,
+			"abc",
+			"",
+		},
+		{
+			"t1.1",
+			2,
+			3,
+			"💥💥",
+			"",
+		},
+		{
+			"t1.2",
+			2,
+			3,
+			"💥💥💥",
+			"",
+		},
+		{
+			"t1.3",
+			2,
+			3,
+			"💥",
+			"the length must be between 2 and 3",
+		},
+		{
+			"t1.4",
+			2,
+			3,
+			"💥💥💥💥",
+			"the length must be between 2 and 3",
+		},
+		{
+			"t2",
+			2,
+			4,
+			"",
+			"",
+		},
+		{
+			"t3",
+			2,
+			4,
+			"abcdf",
+			"the length must be between 2 and 4",
+		},
+		{
+			"t4",
+			0,
+			4,
+			"ab",
+			"",
+		},
+		{
+			"t5",
+			0,
+			4,
+			"abcde",
+			"the length must be no more than 4",
+		},
+		{
+			"t6",
+			2,
+			0,
+			"ab",
+			"",
+		},
+		{
+			"t7",
+			2,
+			0,
+			"a",
+			"the length must be no less than 2",
+		},
+		{
+			"t8",
+			2,
+			0,
+			v,
+			"",
+		},
+		{
+			"t9",
+			2,
+			0,
+			123,
+			"cannot get the length of int",
+		},
+		{
+			"t10",
+			2,
+			4,
+			sql.NullString{
+				String: "abc",
+				Valid:  true,
+			},
+			"",
+		},
+		{
+			"t11",
+			2,
+			4,
+			sql.NullString{
+				String: "",
+				Valid:  true,
+			},
+			"",
+		},
+		{
+			"t12",
+			2,
+			4,
+			&sql.NullString{
+				String: "abc",
+				Valid:  true,
+			},
+			"",
+		},
+		{
+			"t13",
+			2,
+			3,
+			&sql.NullString{
+				String: "💥💥",
+				Valid:  true,
+			},
+			"",
+		},
+		{
+			"t14",
+			2,
+			3,
+			&sql.NullString{
+				String: "💥",
+				Valid:  true,
+			},
+			"the length must be between 2 and 3",
+		},
 	}
 
 	for _, test := range tests {

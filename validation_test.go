@@ -14,10 +14,25 @@ import (
 )
 
 func TestValidate(t *testing.T) {
-	slice := []String123{String123("abc"), String123("123"), String123("xyz")}
-	ctxSlice := []Model4{{A: "abc"}, {A: "def"}}
-	mp := map[string]String123{"c": String123("abc"), "b": String123("123"), "a": String123("xyz")}
-	mpCtx := map[string]StringValidateContext{"c": StringValidateContext("abc"), "b": StringValidateContext("123"), "a": StringValidateContext("xyz")}
+	slice := []String123{
+		String123("abc"),
+		String123("123"),
+		String123("xyz"),
+	}
+	ctxSlice := []Model4{
+		{A: "abc"},
+		{A: "def"},
+	}
+	mp := map[string]String123{
+		"c": String123("abc"),
+		"b": String123("123"),
+		"a": String123("xyz"),
+	}
+	mpCtx := map[string]StringValidateContext{
+		"c": StringValidateContext("abc"),
+		"b": StringValidateContext("123"),
+		"a": StringValidateContext("xyz"),
+	}
 	var (
 		ptr     *string
 		noCtx   StringValidate        = "abc"
@@ -25,26 +40,106 @@ func TestValidate(t *testing.T) {
 	)
 	tests := []struct {
 		tag            string
-		value          interface{}
+		value          any
 		err            string
 		errWithContext string
 	}{
-		{"t1", 123, "", ""},
-		{"t2", String123("123"), "", ""},
-		{"t3", String123("abc"), "error 123", "error 123"},
-		{"t4", []String123{}, "", ""},
-		{"t4.1", []StringValidateContext{}, "", ""},
-		{"t4.2", map[string]StringValidateContext{}, "", ""},
-		{"t5", slice, "0: error 123; 2: error 123.", "0: error 123; 2: error 123."},
-		{"t6", &slice, "0: error 123; 2: error 123.", "0: error 123; 2: error 123."},
-		{"t7", ctxSlice, "", "1: (A: error abc.)."},
-		{"t8", mp, "a: error 123; c: error 123.", "a: error 123; c: error 123."},
-		{"t8.1", mpCtx, "a: must be abc; b: must be abc.", "a: must be abc with context; b: must be abc with context."},
-		{"t9", &mp, "a: error 123; c: error 123.", "a: error 123; c: error 123."},
-		{"t10", map[string]String123{}, "", ""},
-		{"t11", ptr, "", ""},
-		{"t12", noCtx, "called validate", "called validate"},
-		{"t13", withCtx, "must be abc", "must be abc with context"},
+		{
+			"t1",
+			123,
+			"",
+			"",
+		},
+		{
+			"t2",
+			String123("123"),
+			"",
+			"",
+		},
+		{
+			"t3",
+			String123("abc"),
+			"error 123",
+			"error 123",
+		},
+		{
+			"t4",
+			[]String123{},
+			"",
+			"",
+		},
+		{
+			"t4.1",
+			[]StringValidateContext{},
+			"",
+			"",
+		},
+		{
+			"t4.2",
+			map[string]StringValidateContext{},
+			"",
+			"",
+		},
+		{
+			"t5",
+			slice,
+			"0: error 123; 2: error 123.",
+			"0: error 123; 2: error 123.",
+		},
+		{
+			"t6",
+			&slice,
+			"0: error 123; 2: error 123.",
+			"0: error 123; 2: error 123.",
+		},
+		{
+			"t7",
+			ctxSlice,
+			"",
+			"1: (A: error abc.).",
+		},
+		{
+			"t8",
+			mp,
+			"a: error 123; c: error 123.",
+			"a: error 123; c: error 123.",
+		},
+		{
+			"t8.1",
+			mpCtx,
+			"a: must be abc; b: must be abc.",
+			"a: must be abc with context; b: must be abc with context.",
+		},
+		{
+			"t9",
+			&mp,
+			"a: error 123; c: error 123.",
+			"a: error 123; c: error 123.",
+		},
+		{
+			"t10",
+			map[string]String123{},
+			"",
+			"",
+		},
+		{
+			"t11",
+			ptr,
+			"",
+			"",
+		},
+		{
+			"t12",
+			noCtx,
+			"called validate",
+			"called validate",
+		},
+		{
+			"t13",
+			withCtx,
+			"must be abc",
+			"must be abc with context",
+		},
 	}
 	for _, test := range tests {
 		err := Validate(test.value)
@@ -79,7 +174,7 @@ func TestValidate(t *testing.T) {
 }
 
 func stringEqual(str string) RuleFunc {
-	return func(value interface{}) error {
+	return func(value any) error {
 		s, _ := value.(string)
 		if s != str {
 			return errors.New("unexpected string")
@@ -89,13 +184,15 @@ func stringEqual(str string) RuleFunc {
 }
 
 func TestBy(t *testing.T) {
-	abcRule := By(func(value interface{}) error {
-		s, _ := value.(string)
-		if s != "abc" {
-			return errors.New("must be abc")
-		}
-		return nil
-	})
+	abcRule := By(
+		func(value any) error {
+			s, _ := value.(string)
+			if s != "abc" {
+				return errors.New("must be abc")
+			}
+			return nil
+		},
+	)
 	assert.Nil(t, Validate("abc", abcRule))
 	err := Validate("xyz", abcRule)
 	if assert.NotNil(t, err) {
@@ -113,12 +210,14 @@ type key int
 
 func TestByWithContext(t *testing.T) {
 	k := key(1)
-	abcRule := WithContext(func(ctx context.Context, value interface{}) error {
-		if ctx.Value(k) != value.(string) {
-			return errors.New("must be abc")
-		}
-		return nil
-	})
+	abcRule := WithContext(
+		func(ctx context.Context, value any) error {
+			if ctx.Value(k) != value.(string) {
+				return errors.New("must be abc")
+			}
+			return nil
+		},
+	)
 	ctx := context.WithValue(context.Background(), k, "abc")
 	assert.Nil(t, ValidateWithContext(ctx, "abc", abcRule))
 	err := ValidateWithContext(ctx, "xyz", abcRule)
@@ -143,7 +242,7 @@ func assertError(t *testing.T, expected string, err error, tag string) {
 
 type validateAbc struct{}
 
-func (v *validateAbc) Validate(obj interface{}) error {
+func (v *validateAbc) Validate(obj any) error {
 	if !strings.Contains(obj.(string), "abc") {
 		return errors.New("error abc")
 	}
@@ -152,11 +251,11 @@ func (v *validateAbc) Validate(obj interface{}) error {
 
 type validateContextAbc struct{}
 
-func (v *validateContextAbc) Validate(obj interface{}) error {
+func (v *validateContextAbc) Validate(obj any) error {
 	return v.ValidateWithContext(context.Background(), obj)
 }
 
-func (v *validateContextAbc) ValidateWithContext(_ context.Context, obj interface{}) error {
+func (v *validateContextAbc) ValidateWithContext(_ context.Context, obj any) error {
 	if !strings.Contains(obj.(string), "abc") {
 		return errors.New("error abc")
 	}
@@ -165,7 +264,7 @@ func (v *validateContextAbc) ValidateWithContext(_ context.Context, obj interfac
 
 type validateXyz struct{}
 
-func (v *validateXyz) Validate(obj interface{}) error {
+func (v *validateXyz) Validate(obj any) error {
 	if !strings.Contains(obj.(string), "xyz") {
 		return errors.New("error xyz")
 	}
@@ -174,11 +273,11 @@ func (v *validateXyz) Validate(obj interface{}) error {
 
 type validateContextXyz struct{}
 
-func (v *validateContextXyz) Validate(obj interface{}) error {
+func (v *validateContextXyz) Validate(obj any) error {
 	return v.ValidateWithContext(context.Background(), obj)
 }
 
-func (v *validateContextXyz) ValidateWithContext(_ context.Context, obj interface{}) error {
+func (v *validateContextXyz) ValidateWithContext(_ context.Context, obj any) error {
 	if !strings.Contains(obj.(string), "xyz") {
 		return errors.New("error xyz")
 	}
@@ -187,7 +286,7 @@ func (v *validateContextXyz) ValidateWithContext(_ context.Context, obj interfac
 
 type validateInternalError struct{}
 
-func (v *validateInternalError) Validate(obj interface{}) error {
+func (v *validateInternalError) Validate(obj any) error {
 	if strings.Contains(obj.(string), "internal") {
 		return NewInternalError(errors.New("error internal"))
 	}
@@ -226,7 +325,8 @@ type Model3 struct {
 }
 
 func (m Model3) Validate() error {
-	return ValidateStruct(&m,
+	return ValidateStruct(
+		&m,
 		Field(&m.A, &validateAbc{}),
 	)
 }
@@ -236,7 +336,8 @@ type Model4 struct {
 }
 
 func (m Model4) ValidateWithContext(ctx context.Context) error {
-	return ValidateStructWithContext(ctx, &m,
+	return ValidateStructWithContext(
+		ctx, &m,
 		Field(&m.A, &validateContextAbc{}),
 	)
 }

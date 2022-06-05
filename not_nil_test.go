@@ -18,20 +18,48 @@ func TestNotNil(t *testing.T) {
 	var v1 []int
 	var v2 map[string]int
 	var v3 *int
-	var v4 interface{}
+	var v4 any
 	var v5 MyInterface
 	tests := []struct {
 		tag   string
-		value interface{}
+		value any
 		err   string
 	}{
-		{"t1", v1, "is required"},
-		{"t2", v2, "is required"},
-		{"t3", v3, "is required"},
-		{"t4", v4, "is required"},
-		{"t5", v5, "is required"},
-		{"t6", "", ""},
-		{"t7", 0, ""},
+		{
+			"t1",
+			v1,
+			"is required",
+		},
+		{
+			"t2",
+			v2,
+			"is required",
+		},
+		{
+			"t3",
+			v3,
+			"is required",
+		},
+		{
+			"t4",
+			v4,
+			"is required",
+		},
+		{
+			"t5",
+			v5,
+			"is required",
+		},
+		{
+			"t6",
+			"",
+			"",
+		},
+		{
+			"t7",
+			0,
+			"",
+		},
 	}
 
 	for _, test := range tests {

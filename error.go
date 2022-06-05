@@ -20,8 +20,8 @@ type (
 		Code() string
 		Message() string
 		SetMessage(string) Error
-		Params() map[string]interface{}
-		SetParams(map[string]interface{}) Error
+		Params() map[string]any
+		SetParams(map[string]any) Error
 	}
 
 	// ErrorObject is the default validation error
@@ -29,7 +29,7 @@ type (
 	ErrorObject struct {
 		code    string
 		message string
-		params  map[string]interface{}
+		params  map[string]any
 	}
 
 	// Errors represents the validation errors that are indexed by struct field names, map or slice keys.
@@ -69,15 +69,15 @@ func (e ErrorObject) Code() string {
 }
 
 // SetParams set the error's params.
-func (e ErrorObject) SetParams(params map[string]interface{}) Error {
+func (e ErrorObject) SetParams(params map[string]any) Error {
 	e.params = params
 	return e
 }
 
 // AddParam add parameter to the error's parameters.
-func (e ErrorObject) AddParam(name string, value interface{}) Error {
+func (e ErrorObject) AddParam(name string, value any) Error {
 	if e.params == nil {
-		e.params = make(map[string]interface{})
+		e.params = make(map[string]any)
 	}
 
 	e.params[name] = value
@@ -85,7 +85,7 @@ func (e ErrorObject) AddParam(name string, value interface{}) Error {
 }
 
 // Params returns the error's params.
-func (e ErrorObject) Params() map[string]interface{} {
+func (e ErrorObject) Params() map[string]any {
 	return e.params
 }
 
@@ -143,7 +143,7 @@ func (es Errors) Error() string {
 
 // MarshalJSON converts the Errors into a valid JSON.
 func (es Errors) MarshalJSON() ([]byte, error) {
-	errs := map[string]interface{}{}
+	errs := map[string]any{}
 	for key, err := range es {
 		if ms, ok := err.(json.Marshaler); ok {
 			errs[key] = ms

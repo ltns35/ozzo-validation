@@ -78,7 +78,7 @@ func (r DateRule) Max(max time.Time) DateRule {
 }
 
 // Validate checks if the given value is a valid date.
-func (r DateRule) Validate(value interface{}) error {
+func (r DateRule) Validate(value any) error {
 	value, isNil := Indirect(value)
 	if isNil || IsEmpty(value) {
 		return nil

@@ -12,9 +12,13 @@ import (
 
 var (
 	// ErrMinGreaterEqualThanRequired is the error that returns when a value is less than a specified threshold.
-	ErrMinGreaterEqualThanRequired = NewError("validation_min_greater_equal_than_required", "must be no less than {{.threshold}}")
+	ErrMinGreaterEqualThanRequired = NewError(
+		"validation_min_greater_equal_than_required", "must be no less than {{.threshold}}",
+	)
 	// ErrMaxLessEqualThanRequired is the error that returns when a value is greater than a specified threshold.
-	ErrMaxLessEqualThanRequired = NewError("validation_max_less_equal_than_required", "must be no greater than {{.threshold}}")
+	ErrMaxLessEqualThanRequired = NewError(
+		"validation_max_less_equal_than_required", "must be no greater than {{.threshold}}",
+	)
 	// ErrMinGreaterThanRequired is the error that returns when a value is less than or equal to a specified threshold.
 	ErrMinGreaterThanRequired = NewError("validation_min_greater_than_required", "must be greater than {{.threshold}}")
 	// ErrMaxLessThanRequired is the error that returns when a value is greater than or equal to a specified threshold.
@@ -23,7 +27,7 @@ var (
 
 // ThresholdRule is a validation rule that checks if a value satisfies the specified threshold requirement.
 type ThresholdRule struct {
-	threshold interface{}
+	threshold any
 	operator  int
 	err       Error
 }
@@ -40,7 +44,7 @@ const (
 // Note that the value being checked and the threshold value must be of the same type.
 // Only int, uint, float and time.Time types are supported.
 // An empty value is considered valid. Please use the Required rule to make sure a value is not empty.
-func Min(min interface{}) ThresholdRule {
+func Min(min any) ThresholdRule {
 	return ThresholdRule{
 		threshold: min,
 		operator:  greaterEqualThan,
@@ -54,7 +58,7 @@ func Min(min interface{}) ThresholdRule {
 // Note that the value being checked and the threshold value must be of the same type.
 // Only int, uint, float and time.Time types are supported.
 // An empty value is considered valid. Please use the Required rule to make sure a value is not empty.
-func Max(max interface{}) ThresholdRule {
+func Max(max any) ThresholdRule {
 	return ThresholdRule{
 		threshold: max,
 		operator:  lessEqualThan,
@@ -75,7 +79,7 @@ func (r ThresholdRule) Exclusive() ThresholdRule {
 }
 
 // Validate checks if the given value is valid or not.
-func (r ThresholdRule) Validate(value interface{}) error {
+func (r ThresholdRule) Validate(value any) error {
 	value, isNil := Indirect(value)
 	if isNil || IsEmpty(value) {
 		return nil
@@ -127,7 +131,7 @@ func (r ThresholdRule) Validate(value interface{}) error {
 		return fmt.Errorf("type not supported: %v", rv.Type())
 	}
 
-	return r.err.SetParams(map[string]interface{}{"threshold": r.threshold})
+	return r.err.SetParams(map[string]any{"threshold": r.threshold})
 }
 
 // Error sets the error message for the rule.

@@ -17,15 +17,39 @@ func TestRequired(t *testing.T) {
 	var time1 time.Time
 	tests := []struct {
 		tag   string
-		value interface{}
+		value any
 		err   string
 	}{
-		{"t1", 123, ""},
-		{"t2", "", "cannot be blank"},
-		{"t3", &s1, ""},
-		{"t4", &s2, "cannot be blank"},
-		{"t5", nil, "cannot be blank"},
-		{"t6", time1, "cannot be blank"},
+		{
+			"t1",
+			123,
+			"",
+		},
+		{
+			"t2",
+			"",
+			"cannot be blank",
+		},
+		{
+			"t3",
+			&s1,
+			"",
+		},
+		{
+			"t4",
+			&s2,
+			"cannot be blank",
+		},
+		{
+			"t5",
+			nil,
+			"cannot be blank",
+		},
+		{
+			"t6",
+			time1,
+			"cannot be blank",
+		},
 	}
 
 	for _, test := range tests {
@@ -50,14 +74,34 @@ func TestNilOrNotEmpty(t *testing.T) {
 	s2 := ""
 	tests := []struct {
 		tag   string
-		value interface{}
+		value any
 		err   string
 	}{
-		{"t1", 123, ""},
-		{"t2", "", "cannot be blank"},
-		{"t3", &s1, ""},
-		{"t4", &s2, "cannot be blank"},
-		{"t5", nil, ""},
+		{
+			"t1",
+			123,
+			"",
+		},
+		{
+			"t2",
+			"",
+			"cannot be blank",
+		},
+		{
+			"t3",
+			&s1,
+			"",
+		},
+		{
+			"t4",
+			&s2,
+			"cannot be blank",
+		},
+		{
+			"t5",
+			nil,
+			"",
+		},
 	}
 
 	for _, test := range tests {

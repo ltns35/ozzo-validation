@@ -28,7 +28,7 @@ type MatchRule struct {
 }
 
 // Validate checks if the given value is valid or not.
-func (r MatchRule) Validate(value interface{}) error {
+func (r MatchRule) Validate(value any) error {
 	value, isNil := Indirect(value)
 	if isNil {
 		return nil

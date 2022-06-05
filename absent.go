@@ -13,10 +13,16 @@ var (
 
 // Nil is a validation rule that checks if a value is nil.
 // It is the opposite of NotNil rule
-var Nil = absentRule{condition: true, skipNil: false}
+var Nil = absentRule{
+	condition: true,
+	skipNil:   false,
+}
 
 // Empty checks if a not nil value is empty.
-var Empty = absentRule{condition: true, skipNil: true}
+var Empty = absentRule{
+	condition: true,
+	skipNil:   true,
+}
 
 type absentRule struct {
 	condition bool
@@ -25,7 +31,7 @@ type absentRule struct {
 }
 
 // Validate checks if the given value is valid or not.
-func (r absentRule) Validate(value interface{}) error {
+func (r absentRule) Validate(value any) error {
 	if r.condition {
 		value, isNil := Indirect(value)
 		if !r.skipNil && !isNil || r.skipNil && !isNil && !IsEmpty(value) {

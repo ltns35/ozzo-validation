@@ -28,22 +28,22 @@ type (
 	// Rule represents a validation rule.
 	Rule interface {
 		// Validate validates a value and returns a value if validation fails.
-		Validate(value interface{}) error
+		Validate(value any) error
 	}
 
 	// RuleWithContext represents a context-aware validation rule.
 	RuleWithContext interface {
 		// ValidateWithContext validates a value and returns a value if validation fails.
-		ValidateWithContext(ctx context.Context, value interface{}) error
+		ValidateWithContext(ctx context.Context, value any) error
 	}
 
 	// RuleFunc represents a validator function.
 	// You may wrap it as a Rule by calling By().
-	RuleFunc func(value interface{}) error
+	RuleFunc func(value any) error
 
 	// RuleWithContextFunc represents a validator function that is context-aware.
 	// You may wrap it as a Rule by calling WithContext().
-	RuleWithContextFunc func(ctx context.Context, value interface{}) error
+	RuleWithContextFunc func(ctx context.Context, value any) error
 )
 
 var (
@@ -65,7 +65,7 @@ var (
 //    Return with the validation result.
 // 3. If the value being validated is a map/slice/array, and the element type implements `Validatable`,
 //    for each element call the element value's `Validate()`. Return with the validation result.
-func Validate(value interface{}, rules ...Rule) error {
+func Validate(value any, rules ...Rule) error {
 	for _, rule := range rules {
 		if s, ok := rule.(skipRule); ok && s.skip {
 			return nil
@@ -113,7 +113,7 @@ func Validate(value interface{}, rules ...Rule) error {
 //    for each element call the element value's `ValidateWithContext()`. Return with the validation result.
 // 5. If the value being validated is a map/slice/array, and the element type implements `Validatable`,
 //    for each element call the element value's `Validate()`. Return with the validation result.
-func ValidateWithContext(ctx context.Context, value interface{}, rules ...Rule) error {
+func ValidateWithContext(ctx context.Context, value any, rules ...Rule) error {
 	for _, rule := range rules {
 		if s, ok := rule.(skipRule); ok && s.skip {
 			return nil
@@ -232,7 +232,7 @@ type skipRule struct {
 	skip bool
 }
 
-func (r skipRule) Validate(interface{}) error {
+func (r skipRule) Validate(any) error {
 	return nil
 }
 
@@ -247,14 +247,14 @@ type inlineRule struct {
 	fc RuleWithContextFunc
 }
 
-func (r *inlineRule) Validate(value interface{}) error {
+func (r *inlineRule) Validate(value any) error {
 	if r.f == nil {
 		return r.fc(context.Background(), value)
 	}
 	return r.f(value)
 }
 
-func (r *inlineRule) ValidateWithContext(ctx context.Context, value interface{}) error {
+func (r *inlineRule) ValidateWithContext(ctx context.Context, value any) error {
 	if r.fc == nil {
 		return r.f(value)
 	}

@@ -26,7 +26,11 @@ var (
 // This rule should only be used for validating strings, slices, maps, and arrays.
 // An empty value is considered valid. Use the Required rule to make sure a value is not empty.
 func Length(min, max int) LengthRule {
-	return LengthRule{min: min, max: max, err: buildLengthRuleError(min, max)}
+	return LengthRule{
+		min: min,
+		max: max,
+		err: buildLengthRuleError(min, max),
+	}
 }
 
 // RuneLength returns a validation rule that checks if a string's rune length is within the specified range.
@@ -50,7 +54,7 @@ type LengthRule struct {
 }
 
 // Validate checks if the given value is valid or not.
-func (r LengthRule) Validate(value interface{}) error {
+func (r LengthRule) Validate(value any) error {
 	value, isNil := Indirect(value)
 	if isNil || IsEmpty(value) {
 		return nil
@@ -100,5 +104,10 @@ func buildLengthRuleError(min, max int) (err Error) {
 		err = ErrLengthEmptyRequired
 	}
 
-	return err.SetParams(map[string]interface{}{"min": min, "max": max})
+	return err.SetParams(
+		map[string]any{
+			"min": min,
+			"max": max,
+		},
+	)
 }

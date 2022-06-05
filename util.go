@@ -20,7 +20,7 @@ var (
 // EnsureString ensures the given value is a string.
 // If the value is a byte slice, it will be typecast into a string.
 // An error is returned otherwise.
-func EnsureString(value interface{}) (string, error) {
+func EnsureString(value any) (string, error) {
 	v := reflect.ValueOf(value)
 	if v.Kind() == reflect.String {
 		return v.String(), nil
@@ -33,7 +33,7 @@ func EnsureString(value interface{}) (string, error) {
 
 // StringOrBytes typecasts a value into a string or byte slice.
 // Boolean flags are returned to indicate if the typecasting succeeds or not.
-func StringOrBytes(value interface{}) (isString bool, str string, isBytes bool, bs []byte) {
+func StringOrBytes(value any) (isString bool, str string, isBytes bool, bs []byte) {
 	v := reflect.ValueOf(value)
 	if v.Kind() == reflect.String {
 		str = v.String()
@@ -47,7 +47,7 @@ func StringOrBytes(value interface{}) (isString bool, str string, isBytes bool, 
 
 // LengthOfValue returns the length of a value that is a string, slice, map, or array.
 // An error is returned for all other types.
-func LengthOfValue(value interface{}) (int, error) {
+func LengthOfValue(value any) (int, error) {
 	v := reflect.ValueOf(value)
 	switch v.Kind() {
 	case reflect.String, reflect.Slice, reflect.Map, reflect.Array:
@@ -58,7 +58,7 @@ func LengthOfValue(value interface{}) (int, error) {
 
 // ToInt converts the given value to an int64.
 // An error is returned for all incompatible types.
-func ToInt(value interface{}) (int64, error) {
+func ToInt(value any) (int64, error) {
 	v := reflect.ValueOf(value)
 	switch v.Kind() {
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
@@ -69,7 +69,7 @@ func ToInt(value interface{}) (int64, error) {
 
 // ToUint converts the given value to an uint64.
 // An error is returned for all incompatible types.
-func ToUint(value interface{}) (uint64, error) {
+func ToUint(value any) (uint64, error) {
 	v := reflect.ValueOf(value)
 	switch v.Kind() {
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
@@ -80,7 +80,7 @@ func ToUint(value interface{}) (uint64, error) {
 
 // ToFloat converts the given value to a float64.
 // An error is returned for all incompatible types.
-func ToFloat(value interface{}) (float64, error) {
+func ToFloat(value any) (float64, error) {
 	v := reflect.ValueOf(value)
 	switch v.Kind() {
 	case reflect.Float32, reflect.Float64:
@@ -96,7 +96,7 @@ func ToFloat(value interface{}) (float64, error) {
 // - string, array: len() == 0
 // - slice, map: nil or len() == 0
 // - interface, pointer: nil or the referenced value is empty
-func IsEmpty(value interface{}) bool {
+func IsEmpty(value any) bool {
 	v := reflect.ValueOf(value)
 	switch v.Kind() {
 	case reflect.String, reflect.Array, reflect.Map, reflect.Slice:
@@ -131,7 +131,7 @@ func IsEmpty(value interface{}) bool {
 // the Value() method instead. A boolean value is also returned to indicate if
 // the value is nil or not (only applicable to interface, pointer, map, and slice).
 // If the value is neither an interface nor a pointer, it will be returned back.
-func Indirect(value interface{}) (interface{}, bool) {
+func Indirect(value any) (any, bool) {
 	rv := reflect.ValueOf(value)
 	kind := rv.Kind()
 	switch kind {
@@ -155,7 +155,7 @@ func Indirect(value interface{}) (interface{}, bool) {
 	return value, false
 }
 
-func indirectValuer(valuer driver.Valuer) (interface{}, bool) {
+func indirectValuer(valuer driver.Valuer) (any, bool) {
 	if value, err := valuer.Value(); value != nil && err == nil {
 		return Indirect(value)
 	}

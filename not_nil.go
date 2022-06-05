@@ -17,7 +17,7 @@ type notNilRule struct {
 }
 
 // Validate checks if the given value is valid or not.
-func (r notNilRule) Validate(value interface{}) error {
+func (r notNilRule) Validate(value any) error {
 	_, isNil := Indirect(value)
 	if isNil {
 		if r.err != nil {

@@ -131,10 +131,10 @@ in this situation. A single map can have rules for multiple keys, and a key can 
 rules. For example,
 
 ```go
-c := map[string]interface{}{
+c := map[string]any{
 	"Name":  "Qiang Xue",
 	"Email": "q",
-	"Address": map[string]interface{}{
+	"Address": map[string]any{
 		"Street": "123",
 		"City":   "Unknown",
 		"State":  "Virginia",
@@ -511,14 +511,14 @@ method as shown below, which should validate the value and return the validation
 
 ```go
 // Validate validates a value and returns an error if validation fails.
-Validate(value interface{}) error
+Validate(value any) error
 ```
 
 If you already have a function with the same signature as shown above, you can call `validation.By()` to turn
 it into a validation rule. For example,
 
 ```go
-func checkAbc(value interface{}) error {
+func checkAbc(value any) error {
 	s, _ := value.(string)
 	if s != "abc" {
 		return errors.New("must be abc")
@@ -535,7 +535,7 @@ If your validation function takes additional parameters, you can use the followi
 
 ```go
 func stringEquals(str string) validation.RuleFunc {
-	return func(value interface{}) error {
+	return func(value any) error {
 		s, _ := value.(string)
         if s != str {
             return errors.New("unexpected string")
@@ -593,7 +593,7 @@ You can also use `validation.WithContext()` to turn a function into a context-aw
 
 
 ```go
-rule := validation.WithContext(func(ctx context.Context, value interface{}) error {
+rule := validation.WithContext(func(ctx context.Context, value any) error {
 	if ctx.Value("secret") == value.(string) {
 	    return nil
 	}
@@ -614,14 +614,14 @@ When performing context-aware validation, if a rule does not implement `validati
 
 The following rules are provided in the `validation` package:
 
-* `In(...interface{})`: checks if a value can be found in the given list of values.
-* `NotIn(...interface{})`: checks if a value is NOT among the given list of values.
+* `In(...any)`: checks if a value can be found in the given list of values.
+* `NotIn(...any)`: checks if a value is NOT among the given list of values.
 * `Length(min, max int)`: checks if the length of a value is within the specified range.
   This rule should only be used for validating strings, slices, maps, and arrays.
 * `RuneLength(min, max int)`: checks if the length of a string is within the specified range.
   This rule is similar as `Length` except that when the value being validated is a string, it checks
   its rune length instead of byte length.
-* `Min(min interface{})` and `Max(max interface{})`: checks if a value is within the specified range.
+* `Min(min any)` and `Max(max any)`: checks if a value is within the specified range.
   These two rules should only be used for validating int, uint, float and time.Time types.
 * `Match(*regexp.Regexp)`: checks if a value matches the specified regular expression.
   This rule should only be used for strings and byte slices.

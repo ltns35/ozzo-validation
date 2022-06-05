@@ -15,7 +15,7 @@ var ErrInInvalid = NewError("validation_in_invalid", "must be a valid value")
 // reflect.DeepEqual() will be used to determine if two values are equal.
 // For more details please refer to https://golang.org/pkg/reflect/#DeepEqual
 // An empty value is considered valid. Use the Required rule to make sure a value is not empty.
-func In(values ...interface{}) InRule {
+func In(values ...any) InRule {
 	return InRule{
 		elements: values,
 		err:      ErrInInvalid,
@@ -24,12 +24,12 @@ func In(values ...interface{}) InRule {
 
 // InRule is a validation rule that validates if a value can be found in the given list of values.
 type InRule struct {
-	elements []interface{}
+	elements []any
 	err      Error
 }
 
 // Validate checks if the given value is valid or not.
-func (r InRule) Validate(value interface{}) error {
+func (r InRule) Validate(value any) error {
 	value, isNil := Indirect(value)
 	if isNil || IsEmpty(value) {
 		return nil

@@ -19,12 +19,12 @@ type WhenRule struct {
 }
 
 // Validate checks if the condition is true and if so, it validates the value using the specified rules.
-func (r WhenRule) Validate(value interface{}) error {
+func (r WhenRule) Validate(value any) error {
 	return r.ValidateWithContext(nil, value)
 }
 
 // ValidateWithContext checks if the condition is true and if so, it validates the value using the specified rules.
-func (r WhenRule) ValidateWithContext(ctx context.Context, value interface{}) error {
+func (r WhenRule) ValidateWithContext(ctx context.Context, value any) error {
 	if r.condition {
 		if ctx == nil {
 			return Validate(value, r.rules...)

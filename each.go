@@ -26,12 +26,12 @@ type EachRule struct {
 }
 
 // Validate loops through the given iterable and calls the Ozzo Validate() method for each value.
-func (r EachRule) Validate(value interface{}) error {
+func (r EachRule) Validate(value any) error {
 	return r.ValidateWithContext(nil, value)
 }
 
 // ValidateWithContext loops through the given iterable and calls the Ozzo ValidateWithContext() method for each value.
-func (r EachRule) ValidateWithContext(ctx context.Context, value interface{}) error {
+func (r EachRule) ValidateWithContext(ctx context.Context, value any) error {
 	errs := Errors{}
 
 	v := reflect.ValueOf(value)
@@ -72,7 +72,7 @@ func (r EachRule) ValidateWithContext(ctx context.Context, value interface{}) er
 	return nil
 }
 
-func (r EachRule) getInterface(value reflect.Value) interface{} {
+func (r EachRule) getInterface(value reflect.Value) any {
 	switch value.Kind() {
 	case reflect.Ptr, reflect.Interface:
 		if value.IsNil() {

@@ -25,7 +25,8 @@ type Customer struct {
 }
 
 func (a Address) Validate() error {
-	return validation.ValidateStruct(&a,
+	return validation.ValidateStruct(
+		&a,
 		// Street cannot be empty, and the length must between 5 and 50
 		validation.Field(&a.Street, validation.Required, validation.Length(5, 50)),
 		// City cannot be empty, and the length must between 5 and 50
@@ -38,7 +39,8 @@ func (a Address) Validate() error {
 }
 
 func (c Customer) Validate() error {
-	return validation.ValidateStruct(&c,
+	return validation.ValidateStruct(
+		&c,
 		// Name cannot be empty, and the length must be between 5 and 20.
 		validation.Field(&c.Name, validation.Required, validation.Length(5, 20)),
 		// Gender is optional, and should be either "Female" or "Male".
@@ -70,7 +72,8 @@ func Example() {
 
 func Example_second() {
 	data := "example"
-	err := validation.Validate(data,
+	err := validation.Validate(
+		data,
 		validation.Required,       // not empty
 		validation.Length(5, 100), // length between 5 and 100
 		is.URL,                    // is a valid URL
@@ -82,9 +85,21 @@ func Example_second() {
 
 func Example_third() {
 	addresses := []Address{
-		{State: "MD", Zip: "12345"},
-		{Street: "123 Main St", City: "Vienna", State: "VA", Zip: "12345"},
-		{City: "Unknown", State: "NC", Zip: "123"},
+		{
+			State: "MD",
+			Zip:   "12345",
+		},
+		{
+			Street: "123 Main St",
+			City:   "Vienna",
+			State:  "VA",
+			Zip:    "12345",
+		},
+		{
+			City:  "Unknown",
+			State: "NC",
+			Zip:   "123",
+		},
 	}
 	err := validation.Validate(addresses)
 	fmt.Println(err)
@@ -104,7 +119,9 @@ func Example_four() {
 	err := validation.Errors{
 		"name":  validation.Validate(c.Name, validation.Required, validation.Length(5, 20)),
 		"email": validation.Validate(c.Name, validation.Required, is.Email),
-		"zip":   validation.Validate(c.Address.Zip, validation.Required, validation.Match(regexp.MustCompile("^[0-9]{5}$"))),
+		"zip": validation.Validate(
+			c.Address.Zip, validation.Required, validation.Match(regexp.MustCompile("^[0-9]{5}$")),
+		),
 	}.Filter()
 	fmt.Println(err)
 	// Output:
@@ -122,7 +139,8 @@ func Example_five() {
 	}
 
 	m := Manager{}
-	err := validation.ValidateStruct(&m,
+	err := validation.ValidateStruct(
+		&m,
 		validation.Field(&m.Name, validation.Required),
 		validation.Field(&m.Level, validation.Required),
 	)
@@ -135,13 +153,15 @@ type contextKey int
 
 func Example_six() {
 	key := contextKey(1)
-	rule := validation.WithContext(func(ctx context.Context, value interface{}) error {
-		s, _ := value.(string)
-		if ctx.Value(key) == s {
-			return nil
-		}
-		return errors.New("unexpected value")
-	})
+	rule := validation.WithContext(
+		func(ctx context.Context, value any) error {
+			s, _ := value.(string)
+			if ctx.Value(key) == s {
+				return nil
+			}
+			return errors.New("unexpected value")
+		},
+	)
 	ctx := context.WithValue(context.Background(), key, "good sample")
 
 	err1 := validation.ValidateWithContext(ctx, "bad sample", rule)
@@ -156,10 +176,10 @@ func Example_six() {
 }
 
 func Example_seven() {
-	c := map[string]interface{}{
+	c := map[string]any{
 		"Name":  "Qiang Xue",
 		"Email": "q",
-		"Address": map[string]interface{}{
+		"Address": map[string]any{
 			"Street": "123",
 			"City":   "Unknown",
 			"State":  "Virginia",
@@ -167,23 +187,26 @@ func Example_seven() {
 		},
 	}
 
-	err := validation.Validate(c,
+	err := validation.Validate(
+		c,
 		validation.Map(
 			// Name cannot be empty, and the length must be between 5 and 20.
 			validation.Key("Name", validation.Required, validation.Length(5, 20)),
 			// Email cannot be empty and should be in a valid email format.
 			validation.Key("Email", validation.Required, is.Email),
 			// Validate Address using its own validation rules
-			validation.Key("Address", validation.Map(
-				// Street cannot be empty, and the length must between 5 and 50
-				validation.Key("Street", validation.Required, validation.Length(5, 50)),
-				// City cannot be empty, and the length must between 5 and 50
-				validation.Key("City", validation.Required, validation.Length(5, 50)),
-				// State cannot be empty, and must be a string consisting of two letters in upper case
-				validation.Key("State", validation.Required, validation.Match(regexp.MustCompile("^[A-Z]{2}$"))),
-				// State cannot be empty, and must be a string consisting of five digits
-				validation.Key("Zip", validation.Required, validation.Match(regexp.MustCompile("^[0-9]{5}$"))),
-			)),
+			validation.Key(
+				"Address", validation.Map(
+					// Street cannot be empty, and the length must between 5 and 50
+					validation.Key("Street", validation.Required, validation.Length(5, 50)),
+					// City cannot be empty, and the length must between 5 and 50
+					validation.Key("City", validation.Required, validation.Length(5, 50)),
+					// State cannot be empty, and must be a string consisting of two letters in upper case
+					validation.Key("State", validation.Required, validation.Match(regexp.MustCompile("^[A-Z]{2}$"))),
+					// State cannot be empty, and must be a string consisting of five digits
+					validation.Key("Zip", validation.Required, validation.Match(regexp.MustCompile("^[0-9]{5}$"))),
+				),
+			),
 		),
 	)
 	fmt.Println(err)

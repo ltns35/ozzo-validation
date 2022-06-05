@@ -17,15 +17,39 @@ func TestNil(t *testing.T) {
 	var time1 time.Time
 	tests := []struct {
 		tag   string
-		value interface{}
+		value any
 		err   string
 	}{
-		{"t1", 123, "must be blank"},
-		{"t2", "", "must be blank"},
-		{"t3", &s1, "must be blank"},
-		{"t4", &s2, "must be blank"},
-		{"t5", nil, ""},
-		{"t6", time1, "must be blank"},
+		{
+			"t1",
+			123,
+			"must be blank",
+		},
+		{
+			"t2",
+			"",
+			"must be blank",
+		},
+		{
+			"t3",
+			&s1,
+			"must be blank",
+		},
+		{
+			"t4",
+			&s2,
+			"must be blank",
+		},
+		{
+			"t5",
+			nil,
+			"",
+		},
+		{
+			"t6",
+			time1,
+			"must be blank",
+		},
 	}
 
 	for _, test := range tests {
@@ -42,16 +66,44 @@ func TestEmpty(t *testing.T) {
 	var time2 time.Time
 	tests := []struct {
 		tag   string
-		value interface{}
+		value any
 		err   string
 	}{
-		{"t1", 123, "must be blank"},
-		{"t2", "", ""},
-		{"t3", &s1, "must be blank"},
-		{"t4", &s2, ""},
-		{"t5", nil, ""},
-		{"t6", time1, "must be blank"},
-		{"t7", time2, ""},
+		{
+			"t1",
+			123,
+			"must be blank",
+		},
+		{
+			"t2",
+			"",
+			"",
+		},
+		{
+			"t3",
+			&s1,
+			"must be blank",
+		},
+		{
+			"t4",
+			&s2,
+			"",
+		},
+		{
+			"t5",
+			nil,
+			"",
+		},
+		{
+			"t6",
+			time1,
+			"must be blank",
+		},
+		{
+			"t7",
+			time2,
+			"",
+		},
 	}
 
 	for _, test := range tests {

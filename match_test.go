@@ -16,17 +16,57 @@ func TestMatch(t *testing.T) {
 	tests := []struct {
 		tag   string
 		re    string
-		value interface{}
+		value any
 		err   string
 	}{
-		{"t1", "[a-z]+", "abc", ""},
-		{"t2", "[a-z]+", "", ""},
-		{"t3", "[a-z]+", v2, ""},
-		{"t4", "[a-z]+", "123", "must be in a valid format"},
-		{"t5", "[a-z]+", []byte("abc"), ""},
-		{"t6", "[a-z]+", []byte("123"), "must be in a valid format"},
-		{"t7", "[a-z]+", []byte(""), ""},
-		{"t8", "[a-z]+", nil, ""},
+		{
+			"t1",
+			"[a-z]+",
+			"abc",
+			"",
+		},
+		{
+			"t2",
+			"[a-z]+",
+			"",
+			"",
+		},
+		{
+			"t3",
+			"[a-z]+",
+			v2,
+			"",
+		},
+		{
+			"t4",
+			"[a-z]+",
+			"123",
+			"must be in a valid format",
+		},
+		{
+			"t5",
+			"[a-z]+",
+			[]byte("abc"),
+			"",
+		},
+		{
+			"t6",
+			"[a-z]+",
+			[]byte("123"),
+			"must be in a valid format",
+		},
+		{
+			"t7",
+			"[a-z]+",
+			[]byte(""),
+			"",
+		},
+		{
+			"t8",
+			"[a-z]+",
+			nil,
+			"",
+		},
 	}
 
 	for _, test := range tests {

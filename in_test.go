@@ -15,19 +15,89 @@ func TestIn(t *testing.T) {
 	var v2 *int
 	tests := []struct {
 		tag    string
-		values []interface{}
-		value  interface{}
+		values []any
+		value  any
 		err    string
 	}{
-		{"t0", []interface{}{1, 2}, 0, ""},
-		{"t1", []interface{}{1, 2}, 1, ""},
-		{"t2", []interface{}{1, 2}, 2, ""},
-		{"t3", []interface{}{1, 2}, 3, "must be a valid value"},
-		{"t4", []interface{}{}, 3, "must be a valid value"},
-		{"t5", []interface{}{1, 2}, "1", "must be a valid value"},
-		{"t6", []interface{}{1, 2}, &v, ""},
-		{"t7", []interface{}{1, 2}, v2, ""},
-		{"t8", []interface{}{[]byte{1}, 1, 2}, []byte{1}, ""},
+		{
+			"t0",
+			[]any{
+				1,
+				2,
+			},
+			0,
+			"",
+		},
+		{
+			"t1",
+			[]any{
+				1,
+				2,
+			},
+			1,
+			"",
+		},
+		{
+			"t2",
+			[]any{
+				1,
+				2,
+			},
+			2,
+			"",
+		},
+		{
+			"t3",
+			[]any{
+				1,
+				2,
+			},
+			3,
+			"must be a valid value",
+		},
+		{
+			"t4",
+			[]any{},
+			3,
+			"must be a valid value",
+		},
+		{
+			"t5",
+			[]any{
+				1,
+				2,
+			},
+			"1",
+			"must be a valid value",
+		},
+		{
+			"t6",
+			[]any{
+				1,
+				2,
+			},
+			&v,
+			"",
+		},
+		{
+			"t7",
+			[]any{
+				1,
+				2,
+			},
+			v2,
+			"",
+		},
+		{
+			"t8",
+			[]any{
+				[]byte{1},
+				1,
+				2,
+			},
+			[]byte{1},
+			"",
+		},
 	}
 
 	for _, test := range tests {

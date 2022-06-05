@@ -26,7 +26,7 @@ type (
 
 	// FieldRules represents a rule set associated with a struct field.
 	FieldRules struct {
-		fieldPtr interface{}
+		fieldPtr any
 		rules    []Rule
 	}
 )
@@ -59,7 +59,7 @@ func (e ErrFieldNotFound) Error() string {
 //    // Value: the length must be between 5 and 10.
 //
 // An error will be returned if validation fails.
-func ValidateStruct(structPtr interface{}, fields ...*FieldRules) error {
+func ValidateStruct(structPtr any, fields ...*FieldRules) error {
 	return ValidateStructWithContext(nil, structPtr, fields...)
 }
 
@@ -67,7 +67,7 @@ func ValidateStruct(structPtr interface{}, fields ...*FieldRules) error {
 // The only difference between ValidateStructWithContext and ValidateStruct is that the former will
 // validate struct fields with the provided context.
 // Please refer to ValidateStruct for the detailed instructions on how to use this function.
-func ValidateStructWithContext(ctx context.Context, structPtr interface{}, fields ...*FieldRules) error {
+func ValidateStructWithContext(ctx context.Context, structPtr any, fields ...*FieldRules) error {
 	value := reflect.ValueOf(structPtr)
 	if value.Kind() != reflect.Ptr || !value.IsNil() && value.Elem().Kind() != reflect.Struct {
 		// must be a pointer to a struct
@@ -121,7 +121,7 @@ func ValidateStructWithContext(ctx context.Context, structPtr interface{}, field
 
 // Field specifies a struct field and the corresponding validation rules.
 // The struct field must be specified as a pointer to it.
-func Field(fieldPtr interface{}, rules ...Rule) *FieldRules {
+func Field(fieldPtr any, rules ...Rule) *FieldRules {
 	return &FieldRules{
 		fieldPtr: fieldPtr,
 		rules:    rules,

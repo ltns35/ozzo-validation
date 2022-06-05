@@ -45,7 +45,7 @@ func (r StringRule) ErrorObject(err Error) StringRule {
 }
 
 // Validate checks if the given value is valid or not.
-func (r StringRule) Validate(value interface{}) error {
+func (r StringRule) Validate(value any) error {
 	value, isNil := Indirect(value)
 	if isNil || IsEmpty(value) {
 		return nil

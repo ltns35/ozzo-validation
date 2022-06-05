@@ -30,7 +30,7 @@ type (
 
 	// KeyRules represents a rule set associated with a map key.
 	KeyRules struct {
-		key      interface{}
+		key      any
 		optional bool
 		rules    []Rule
 	}
@@ -58,12 +58,12 @@ func (r MapRule) AllowExtraKeys() MapRule {
 }
 
 // Validate checks if the given value is valid or not.
-func (r MapRule) Validate(m interface{}) error {
+func (r MapRule) Validate(m any) error {
 	return r.ValidateWithContext(nil, m)
 }
 
 // ValidateWithContext checks if the given value is valid or not.
-func (r MapRule) ValidateWithContext(ctx context.Context, m interface{}) error {
+func (r MapRule) ValidateWithContext(ctx context.Context, m any) error {
 	value := reflect.ValueOf(m)
 	if value.Kind() == reflect.Ptr {
 		value = value.Elem()
@@ -80,9 +80,9 @@ func (r MapRule) ValidateWithContext(ctx context.Context, m interface{}) error {
 	errs := Errors{}
 	kt := value.Type().Key()
 
-	var extraKeys map[interface{}]bool
+	var extraKeys map[any]bool
 	if !r.allowExtraKeys {
-		extraKeys = make(map[interface{}]bool, value.Len())
+		extraKeys = make(map[any]bool, value.Len())
 		for _, k := range value.MapKeys() {
 			extraKeys[k.Interface()] = true
 		}
@@ -125,7 +125,7 @@ func (r MapRule) ValidateWithContext(ctx context.Context, m interface{}) error {
 }
 
 // Key specifies a map key and the corresponding validation rules.
-func Key(key interface{}, rules ...Rule) *KeyRules {
+func Key(key any, rules ...Rule) *KeyRules {
 	return &KeyRules{
 		key:   key,
 		rules: rules,
@@ -139,6 +139,6 @@ func (r *KeyRules) Optional() *KeyRules {
 }
 
 // getErrorKeyName returns the name that should be used to represent the validation error of a map key.
-func getErrorKeyName(key interface{}) string {
+func getErrorKeyName(key any) string {
 	return fmt.Sprintf("%v", key)
 }
